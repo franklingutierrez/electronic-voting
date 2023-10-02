@@ -1,0 +1,24 @@
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head th:replace="layout/layout-election :: head">
+</head>
+
+<body>
+    <div class="container">
+        <div class="left" th:replace="layout/layout-election ::left">
+        </div>
+        <div class="right">
+	        <form action="/election" method="POST">
+	            <img th:src="@{/uploads/}+${institution.logo}" width="90" height="100">
+	            <h1 th:text="${institution.name}"></h1>
+	            <p>Ingrese su código</p>
+	            <input name="dni" autocomplete="off" type="text" style="width: 100%;" />
+	                <small th:if="${message}" th:text="${message}"></small>
+	
+	            <button class="button" type="submit">Buscar</button>
+	        </form>
+	        <div th:if="${messageVote}" class="alert alert-success floating-alert" role="alert" th:text="${messageVote}"></div>
+        </div>
+    </div>
+</body>
+<div th:replace="layout/layout-election ::js"></div>
+</html>

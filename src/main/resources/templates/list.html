@@ -1,0 +1,135 @@
+<html xmlns:th="http://thymeleaf.org">
+	<head th:replace="layout/layout :: head">
+	</head>
+
+	<body>
+	<div class="wrapper">
+		<nav th:replace="layout/layout :: nav-vertical"></nav>
+		<div class="main">
+			<nav th:replace="layout/layout :: nav-horizontal"></nav>
+			<main class="content" >
+				<div th:if="${message}" th:classappend="${message[0]=='OK' ? 'alert-success' : 'alert-danger'}" class="alert floating-alert" role="alert" th:text="${message[1]}"></div>
+				<div class="container-fluid p-0">
+					<div class="mb-3">
+						<h1 class="h3 d-inline align-middle" th:text="${title}"></h1>
+						<a class="btn btn-primary btn-sm mx-2" th:onclick="register()"> Registrar</a>
+					</div>
+					<div class="row">
+						<div class="card pt-4 pb-2 px-4" >
+						<table class="table table-sm table-bordered table-hover" style="font-size: .9rem;">
+						  <thead class="bg-dark text-white">
+						    <tr>
+						      <th class="text-left" scope="col">#</th>
+						      <th class="text-center" scope="col">Nombre</th>
+						      <th class="text-center" scope="col">Img Candidado.</th>
+						      <th class="text-center" scope="col">Logo</th>
+						      <th class="text-center" scope="col">Estado</th>
+						      <th class="text-center" style="width: 9rem;"></th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						    <tr th:each="list,stat : ${lists}">
+						      <td scope="row" th:text="${stat.count}"></td>
+						      <td><a th:href="@{/list/role/}+${list.id}" th:text="${list.name}">Nombre</a></td>
+						      <td class="text-center" th:text="${list.imgCandidate}"></td>
+						      <td class="text-center" th:text="${list.logo}"></td>
+						      <td class="text-center">
+								  <span th:if="${list.state == '1'}" class="badge bg-success">Activo</span>
+								  <span th:unless="${list.state == '1'}" class="badge bg-danger">Inactivo</span>
+							  </td>
+							  <td>
+								  <a th:onclick="edit([[${list}]])" class="btn btn-sm btn-primary">Editar</a>
+								  <a th:href="@{/list/delete/}+${list.id}" class="btn btn-sm btn-danger">Eliminar</a>
+								  </td>
+						    </tr>
+						    
+						  </tbody>
+						</table>
+						</div>
+				
+					</div>
+				</div>
+				
+			</main>
+			<footer th:replace="layout/layout :: footer"></footer>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5" id="exampleModalLabel">Candidato Lista</h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+			<form th:action="@{/list}" th:object="${newList}" method="post" enctype="multipart/form-data">
+	        <div class="row">
+				<input type="hidden" th:field="*{id}" class="form-control" id="id">
+				<div class="col-12">
+					<label>Nombre*</label>
+					<input type="text" class="form-control" th:field="*{name}" id="name" placeholder="Nombre">
+					<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+
+				</div>
+				<div class="col-12">
+					<label>Img Candidato*</label>
+					<input type="file" class="form-control" id="imgCandidate" th:field="*{imgCandidate}" placeholder="Abreviatura">
+					<span th:if="${#fields.hasErrors('imgCandidate')}" th:errors="*{imgCandidate}"></span>
+					<span style="color: 086cc3; margin-left: 10px;" id="simgCandidate">
+						
+					</span>
+
+				</div>
+				<div class="col-12">
+					<label>Logo*</label>
+					<input type="file" class="form-control" id="logo" th:field="*{logo}" placeholder="Logo">
+					<span th:if="${#fields.hasErrors('logo')}" th:errors="*{logo}"></span>
+					<span style="color: 086cc3; margin-left: 10px;" id="slogo"></span>
+				</div>
+				<div class="col-12">
+					<label for="exampleColorInput" class="form-label">Color</label>
+					<input type="color" class="form-control form-control-color" id="color" th:field="*{color}"  title="Choose your color">				
+					<span th:if="${#fields.hasErrors('color')}" th:errors="*{logo}"></span>
+				</div>
+			</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	        <button type="submit" onclick="validar()" id="btnAccion" class="btn btn-primary">Registrar</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<div th:replace="layout/layout :: script">
+		
+			
+	</div>
+	<script>
+		function edit(data){
+			console.log(data);
+			document.getElementById("btnAccion").innerHTML 		= 'Actualizar';
+			document.getElementById("id").value 				= data.id;
+			document.getElementById("name").value 				= data.name;
+			document.getElementById("simgCandidate").innerHTML 	= "<button type='button' class='btn-close'></button><img src='/uploads/"+data.imgCandidate+"'/>";
+			document.getElementById("slogo").innerHTML 			= "<button type='button' class='btn-close'></button><img src='/uploads/"+data.logo+"'/>";
+			document.getElementById("color").value 				= data.color;
+			var modal 											= new bootstrap.Modal(document.getElementById("exampleModal"));
+			modal.show();
+			
+		};
+			
+		function register(){
+			document.getElementById("btnAccion").innerHTML 		= 'Registrar';
+			document.getElementById("id").value 				= '';
+			document.getElementById("simgCandidate").innerHTML 	= '';
+			document.getElementById("slogo").innerHTML 			= '';
+			document.getElementById("name").value 				= '';
+			document.getElementById("color").value 				= '';
+			var modal 											= new bootstrap.Modal(document.getElementById("exampleModal"));
+			modal.show();
+		}
+		
+	</script>
+</html>

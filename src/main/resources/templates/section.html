@@ -1,0 +1,112 @@
+<html xmlns:th="http://thymeleaf.org">
+	<head th:replace="layout/layout :: head">
+	</head>
+	<body>
+	<div class="wrapper">
+		<nav th:replace="layout/layout :: nav-vertical"></nav>
+		<div class="main">
+			<nav th:replace="layout/layout :: nav-horizontal"></nav>
+			<main class="content" >
+				<div class="container-fluid p-0">
+					<div class="mb-3">
+						<h1 class="h3 d-inline align-middle" th:text="${title}"></h1>
+						<a class="btn btn-primary btn-sm mx-2" th:onclick="registrar()"> Registrar</a>
+					</div>
+					<div class="row">
+						<div class="card pt-4 pb-2 px-4" >
+						<table class="table table-sm table-bordered table-hover" style="font-size: .9rem;">
+						  <thead class="bg-dark text-white">
+						    <tr>
+						      <th class="text-left" scope="col">#</th>
+						      <th class="text-center" scope="col">Nombre</th>
+						      <th class="text-center" scope="col">Abrev.</th>
+						      <th class="text-center" scope="col">Estado</th>
+						      <th class="text-center" style="width: 9rem;"></th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						    <tr th:each="section,stat : ${sections}">
+						      <td scope="row" th:text="${stat.count}"></td>
+						      <td th:text="${section.name}"></td>
+						      <td class="text-center" th:text="${section.abbreviation}"></td>
+						      <td class="text-center">
+								  <span th:if="${section.state == '1'}" class="badge bg-success">Activo</span>
+								  <span th:unless="${section.state == '1'}" class="badge bg-danger">Inactivo</span>
+							  </td>
+							  <td>
+								  <a th:onclick="alex([[${section}]])" class="btn btn-sm btn-primary">Editar</a>
+								  <a th:href="@{/section/delete/}+${section.id}" class="btn btn-sm btn-danger">Eliminar</a>
+								  </td>
+						    </tr>
+						    
+						  </tbody>
+						</table>
+						</div>
+				
+					</div>
+				</div>
+				
+			</main>
+			<footer th:replace="layout/layout :: footer"></footer>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5" id="exampleModalLabel">Sección</h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+			<form th:action="@{/section}" th:object="${nuevoSection}" method="post">
+	        <div class="row">
+				<input type="hidden" th:field="*{id}" class="form-control" id="id">
+				<div class="col-12 col-lg-6">
+					<label>Nombre*</label>
+					<input type="text" class="form-control" th:field="*{name}" id="name" placeholder="Nombre">
+					<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+
+				</div>
+				<div class="col-12 col-lg-6">
+					<label>Abreviatura*</label>
+					<input type="text" class="form-control" id="abbreviation" th:field="*{abbreviation}" placeholder="Abreviatura">
+					<span th:if="${#fields.hasErrors('abbreviation')}" th:errors="*{abbreviation}"></span>
+
+				</div>
+			</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	        <button type="submit" onclick="validar()" id="btnAccion" class="btn btn-primary">Registrar</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<div th:replace="layout/layout :: script">
+		
+			
+	</div>
+	<script>
+			function alex(data){
+				//console.log(data);
+				document.getElementById("btnAccion").innerHTML = 'Actualizar';
+				document.getElementById("id").value = data.id;
+				document.getElementById("name").value = data.name;
+				document.getElementById("abbreviation").value = data.abbreviation;
+				var modal = new bootstrap.Modal(document.getElementById("exampleModal"));
+				modal.show();
+				
+			};
+			
+			function registrar(){
+				document.getElementById("btnAccion").innerHTML = 'Registrar';
+				document.getElementById("id").value = '';
+				document.getElementById("name").value = '';
+				document.getElementById("abbreviation").value = '';
+				var modal = new bootstrap.Modal(document.getElementById("exampleModal"));
+				modal.show();
+			}
+		</script>
+</html>

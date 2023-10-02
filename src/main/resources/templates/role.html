@@ -1,0 +1,109 @@
+<html xmlns:th="http://thymeleaf.org">
+	<head th:replace="layout/layout :: head">
+	</head>
+	<body>
+	<div class="wrapper">
+		<nav th:replace="layout/layout :: nav-vertical"></nav>
+		<div class="main">
+			<nav th:replace="layout/layout :: nav-horizontal"></nav>
+			<main class="content" >
+				<div class="container-fluid p-0">
+					<div class="mb-3">
+						<h1 class="h3 d-inline align-middle" th:text="${title}"></h1>
+						<a class="btn btn-primary btn-sm mx-2" th:onclick="register()"> Registrar</a>
+					</div>
+					<div class="row">
+						<div class="card pt-4 pb-2 px-4" >
+						<table class="table table-sm table-bordered table-hover" style="font-size: .9rem;">
+						  <thead class="bg-dark text-white">
+						    <tr>
+						      <th class="text-left"   scope="col">#</th>
+						      <th class="text-center" scope="col">Nombre</th>
+						      <th class="text-center" scope="col">Orden</th>
+						      <th class="text-center" scope="col">Estado</th>
+						      <th class="text-center" style="width: 9rem;"></th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						  	<tr th:each="role,stat : ${roles}">
+						  		<td scope="row" th:text="${stat.count}"></td>
+						      	<td th:text="${role.name}"></td>
+						      	<td class="text-center" th:text="${role.orderr}"></td>
+						      	<td class="text-center">
+								  <span th:if="${role.state == '1'}" class="badge bg-success">Activo</span>
+								  <span th:unless="${role.state == '1'}" class="badge bg-danger">Inactivo</span>
+							  	</td>
+							  	<td>
+								  <a th:onclick="edit([[${role}]])" class="btn btn-sm btn-primary">Editar</a>
+								  <a th:href="@{/role/delete/}+${role.id}" class="btn btn-sm btn-danger">Eliminar</a>
+								</td>
+						    </tr>
+						  </tbody>
+						</table>
+						</div>
+				
+					</div>
+				</div>
+				
+			</main>
+			<footer th:replace="layout/layout :: footer"></footer>
+		</div>
+	</div>
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h1 class="modal-title fs-5" id="exampleModalLabel">Rol</h1>
+	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	      </div>
+	      <div class="modal-body">
+			<form th:action="@{/role}" th:object="${nuevoRol}" method="post">
+	        <div class="row">
+				<input type="hidden" th:field="*{id}" class="form-control" id="id">
+				<div class="col-12 col-lg-6">
+					<label>Nombre*</label>
+					<input type="text" class="form-control" th:field="*{name}" id="name" placeholder="Nombre">
+					<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+
+				</div>
+				<div class="col-12 col-lg-6">
+					<label>Orden*</label>
+					<input type="text" class="form-control" id="orden" th:field="*{orderr}" placeholder="Orden">
+					<span th:if="${#fields.hasErrors('orderr')}" th:errors="*{orderr}"></span>
+
+				</div>
+			</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+	        <button type="submit" onclick="validar()" id="btnAccion" class="btn btn-primary">Registrar</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	
+	<div th:replace="layout/layout :: script">	
+	</div>
+	<script>
+		function edit(data){
+			//console.log(data);
+			document.getElementById("btnAccion").innerHTML = 'Actualizar';
+			document.getElementById("id").value = data.id;
+			document.getElementById("name").value = data.name;
+			document.getElementById("orden").value = data.orden;
+			var modal = new bootstrap.Modal(document.getElementById("exampleModal"));
+			modal.show();
+			
+		};
+			
+		function register(){
+			document.getElementById("btnAccion").innerHTML = 'Registrar';
+			document.getElementById("id").value = '';
+			document.getElementById("name").value = '';
+			document.getElementById("orden").value = '';
+			var modal = new bootstrap.Modal(document.getElementById("exampleModal"));
+			modal.show();
+		}
+		</script>
+</html>

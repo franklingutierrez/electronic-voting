@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script th:src="@{/js/chart.js_3.9.1_chart.min.js}"></script>
+<style>
+    body{
+        background: #f5f5f7;
+    }
+    .grafico{
+        width: 40%;
+        right: 30%;
+        position: absolute;
+    }
+    h1{
+        text-align: center;
+    }
+</style>
+<body>
+<h1>Resultados Elecciones Municipio Escolar 2023</h1>
+<div class="grafico">
+    <canvas id="myChart" width="400" height="400"></canvas>
+</div>
+
+</body>
+
+<script th:inline="javascript">
+	 var labels	= [[${labels}]];
+     var data 	= [[${data}]];
+const ctx = document.getElementById('myChart').getContext('2d');
+const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'VOTOS',
+            data: data,
+            backgroundColor: [
+                '#ff638433',
+                '#36a2eb33',
+                '#ffce5633',
+                '#ff6384',  // Rojo
+			    '#36a2eb',  // Azul
+			    '#ffce56',  // Amarillo
+			    '#4bc0c0',  // Verde agua
+			    '#9966cc',  // Morado
+			    '#ff9f40',  // Naranja
+			    '#33cccc',  // Cian
+			    '#ff6699',  // Rosa
+			    '#99ff99',  // Verde claro
+			    '#c2c2f0'   // Azul claro
+                
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(255, 99, 132, 1)',       // Rojo
+			    'rgba(54, 162, 235, 1)',       // Azul
+			    'rgba(255, 206, 86, 1)',       // Amarillo
+			    'rgba(75, 192, 192, 1)',       // Verde agua
+			    'rgba(153, 102, 204, 1)',      // Morado
+			    'rgba(255, 159, 64, 1)',       // Naranja
+			    'rgba(51, 204, 204, 1)',       // Cian
+			    'rgba(255, 102, 153, 1)',      // Rosa
+			    'rgba(153, 255, 153, 1)',      // Verde claro
+			    'rgba(194, 194, 240, 1)'       // Azul claro
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+
+</html>
