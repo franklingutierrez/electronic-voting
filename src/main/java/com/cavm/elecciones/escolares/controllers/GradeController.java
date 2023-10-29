@@ -40,7 +40,7 @@ public class GradeController {
 		return "redirect:/grade";
 	}
 	
-	@GetMapping("delete/{id}")
+	@GetMapping("/delete/{id}")
 	public String delete(@PathVariable Long id) {
 		if(id >0) {
 			gradeService.deleteById(id);

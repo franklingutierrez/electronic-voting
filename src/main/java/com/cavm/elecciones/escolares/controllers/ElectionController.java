@@ -1,6 +1,8 @@
 package com.cavm.elecciones.escolares.controllers;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,11 +33,15 @@ import com.cavm.elecciones.escolares.services.IListRoleService;
 import com.cavm.elecciones.escolares.services.IStudentService;
 import com.cavm.elecciones.escolares.services.IVoteService;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/election")
 public class ElectionController {
+	
+	@Autowired
+	private HttpSession httpSession;
 	
 	@Autowired
 	private IStudentService studentService;
@@ -55,11 +62,31 @@ public class ElectionController {
 	private IElectionService electionService;
 	
 	@GetMapping("")
-	public String index(Model model) {
-		Institution institution = institutionService.findFirstByOrderByIdAsc();
+	public String index(Model model) throws UnknownHostException {
+		InetAddress localhost = InetAddress.getLocalHost();
+		String ipLocal = localhost.getHostAddress();
+		System.out.println(ipLocal);
+		Institution institution 	= institutionService.findFirstByOrderByIdAsc();
+		Election election 			= electionService.findFirstByOrderByIdAsc();
+		httpSession.setAttribute("election", election);
+		boolean permissionIp 		= true;
+		if(election != null && !election.getIps().isBlank()) {
+			permissionIp = false;
+			String[] ips = election.getIps().split(";");
+			for(int i=0; i<ips.length; i++) {
+				System.out.println("ip:"+ips[i]);
+				if(ipLocal.equals(ips[i])) {
+					permissionIp = true;
+					System.out.println("encontrado");
+					break;
+				}
+			}
+		}
 		if(institution==null)institution = new Institution();
 		model.addAttribute("ruta", "election");
 		model.addAttribute("institution", institution);
+		model.addAttribute("election", election);
+		model.addAttribute("permissionIp", permissionIp);
 		return "election";
 	}
 	
@@ -76,9 +103,11 @@ public class ElectionController {
 				return "redirect:/election";
 			}else {
 				redirect.addFlashAttribute("student", student);
+				redirect.addFlashAttribute("election", (Election)httpSession.getAttribute("election"));
 				return "redirect:/election/vote";
 			}
 		}else {
+			//model.addAttribute("ruta", "election");
 			model.addAttribute("message", "Alumno no registrado");
 			return "election";
 		}
@@ -108,8 +137,8 @@ public class ElectionController {
 		return "vote";
 	}
 	
-	@PostMapping("/list-candidate")
-	public String listCandidate(Model model, @RequestParam("listId") Long listId) {
+	@GetMapping("/list-candidate/{listId}")
+	public String listCandidate(Model model, @PathVariable Long listId) {
 		model.addAttribute("roles", listRoleService.listRoleByList(listId));
 		return "list-candidate";
 	}
@@ -146,13 +175,13 @@ public class ElectionController {
 	}
 	
 	@PostMapping("/config")
-	public String config(@Valid Election election, BindingResult result, @RequestParam MultipartFile logo, RedirectAttributes redirect) throws IOException {
+	public String config(@Valid Election election, BindingResult result, @RequestParam MultipartFile logo, RedirectAttributes redirect, Model model) throws IOException {
 		if(!election.getName().isBlank()/* && !logo.isEmpty()*/) {
 			if(!logo.isEmpty()) {
 			Path directorioRecursos = Paths.get("src//main//resources//static/uploads");
 			String rootPath 	= directorioRecursos.toFile().getAbsolutePath();
 			String extension 	= StringUtils.getFilenameExtension(logo.getOriginalFilename());
-			String name			= election.getName().replace(" ", "_");
+			String name			= election.getName().substring(0, 10).replace(" ", "_");
 			Path rutaCompleta	= Paths.get(rootPath +"//"+name+"_conf."+extension);
 			byte[] bytes 		= logo.getBytes();
 			Files.write(rutaCompleta, bytes);
@@ -165,8 +194,10 @@ public class ElectionController {
 					electionService.save(election);
 				return "redirect:/election/config";
 				}else {
-					redirect.addFlashAttribute("message", new String[] {"ERROR", "Debe subir su logo!!!"});
-					return "redirect:/election/config";
+					model.addAttribute("title", "Datos de la Elección");
+					model.addAttribute("election", election);
+					model.addAttribute("message", new String[] {"ERROR", "Debe subir su logo!!!"});
+					return "election-config";
 				}
 			}
 			electionService.save(election);
@@ -176,4 +207,13 @@ public class ElectionController {
 		}
 		return "redirect:/election/config";
 	}
+	
+	@GetMapping("/missing-vote")
+	public String missingVote(Model model) {
+		List<Student> students = voteService.findStudentsWithoutVotes();
+		//students.forEach(e->System.out.println(e.getDni()));
+		model.addAttribute("title", "Faltan emitir su voto");
+		model.addAttribute("students", students);
+		return "missing-vote";
+	} 
 }

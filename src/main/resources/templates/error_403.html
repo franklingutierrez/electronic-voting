@@ -1,0 +1,22 @@
+<html xmlns:th="http://thymeleaf.org">
+	<head th:replace="layout/layout :: head">
+	</head>
+
+	<body>
+	<div class="wrapper">
+		<nav th:replace="layout/layout :: nav-vertical"></nav>
+		<div class="main">
+			<nav th:replace="layout/layout :: nav-horizontal"></nav>
+			<main class="content" >
+				<div th:if="${message}" th:classappend="${message[0]=='OK' ? 'alert-success' : 'alert-danger'}" class="alert floating-alert" role="alert" th:text="${message[1]}"></div>
+				<div class="container-fluid p-0">
+					<h5 class="card-title">Lo sentimos <span th:text="${#httpServletRequest.remoteUser}"></span> No tienes permisos para acceder a este recurso</h5>
+				</div>
+				
+			</main>
+			<footer th:replace="layout/layout :: footer"></footer>
+		</div>
+	</div>	
+	<div th:replace="layout/layout :: script">
+	</div>
+</html>

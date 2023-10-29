@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "elections")
@@ -23,7 +22,7 @@ public class Election {
 	@Column(nullable = false)
 	private String state="1";
 	
-	@NotNull
+	//@NotBlank
 	@Column(nullable = false)
 	private int year;
 	

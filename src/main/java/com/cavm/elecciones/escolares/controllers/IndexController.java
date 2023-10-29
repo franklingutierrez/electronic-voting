@@ -16,11 +16,11 @@ public class IndexController {
 	@Autowired
 	private IUserService userService;
 	
-	@GetMapping({"/"})
+	/*@GetMapping({"/"})
 	public String index(Model model) {
 		model.addAttribute("titulo", "Hola Spring");
 		return "redirect:/sign-in";
-	}
+	}*/
 	
 	@GetMapping({"/menu"})
 	public String menu(Model model) {

@@ -9,8 +9,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 @EnableWebSecurity
@@ -51,15 +49,18 @@ public class SpringSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 		.authorizeHttpRequests((requests) -> requests
-			.requestMatchers("/", "/role","/img/**","/css/**","/js/**","/uploads/**").permitAll()
-			.requestMatchers("/institution").hasRole("ADMIN")
+			.requestMatchers("/", "/election/**","/img/**","/css/**","/js/**","/uploads/**").permitAll()
+			//.requestMatchers("/institution").hasRole("ADMIN")
 			.anyRequest().authenticated()
 		)
 		.formLogin((form) -> form
-			//.loginPage("/login")
+			.loginPage("/login")
 			.permitAll()
 		)
-		.logout((logout) -> logout.permitAll());
+		.logout((logout) -> logout.permitAll())
+		.exceptionHandling((error)->{
+			error.accessDeniedPage("/error_403");
+		});
 
 	return http.build();
             

@@ -30,4 +30,9 @@ public class VoteServiceImpl implements IVoteService {
 		return voteRepository.countVoteByList();
 	}
 
+	@Override
+	public List<Student> findStudentsWithoutVotes() {
+		return voteRepository.findStudentsWithoutVotes();
+	}
+
 }

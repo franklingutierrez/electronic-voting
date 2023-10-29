@@ -3,11 +3,15 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="left" th:replace="layout/layout-election ::left">
+    <div th:if="${permissionIp}" class="container">
+        <div class="left" th:fragment="left">
+            <div class="alex">
+                <img th:if="${election != null}" th:src="@{/uploads/}+${election.logo}">
+                <img th:unless="${election != null}" th:src="@{/uploads/}+'x.png'">
+            </div>
         </div>
         <div class="right">
-	        <form action="/election" method="POST">
+	        <form th:action="@{/election}" method="POST">
 	            <img th:src="@{/uploads/}+${institution.logo}" width="90" height="100">
 	            <h1 th:text="${institution.name}"></h1>
 	            <p>Ingrese su código</p>
@@ -18,6 +22,11 @@
 	        </form>
 	        <div th:if="${messageVote}" class="alert alert-success floating-alert" role="alert" th:text="${messageVote}"></div>
         </div>
+    </div>
+    <div th:unless="${permissionIp}" style="background-color:rgb(226, 226, 226); display: flex; justify-content: center;align-items: center; height: 100vh;">
+		<div style="background-color: red; padding: 35px; color: aliceblue; border-radius: 10px;font-size: 18px;">
+ 			SU ORDENADOR NO TIENE PERMISO
+		</div>
     </div>
 </body>
 <div th:replace="layout/layout-election ::js"></div>

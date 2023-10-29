@@ -4,7 +4,11 @@
 
 <body>
     <div class="container">
-        <div class="left" th:replace="layout/layout-election ::left">
+        <div class="left" th:fragment="left">
+            <div class="alex">
+                <img th:if="${election != null}" th:src="@{/uploads/}+${election.logo}">
+                <img th:unless="${election != null}" th:src="@{/uploads/}+'x.png'">
+            </div>
         </div>
         <div class="right">
 	        <div>
@@ -49,7 +53,7 @@
 	</div>
     <!-- Modal  -->
     <div id="confirm-modal" class="modal-confirm">
-		<form action="/election/vote" method="POST">
+		<form th:action="@{/election/vote}" method="POST">
 		    <div class="modal__content">
 		        <h2>Confirmar!!!</h2>
 		        <p id="candidato">
@@ -85,21 +89,23 @@
 
         }
     function verCandidatos(lista_id){
+		var baseURL = window.location.protocol + '//' + window.location.host;
+		let rutaCompleta = baseURL+'/election/list-candidate/'+lista_id;
+		console.log(rutaCompleta);
             elemento = document.getElementById("demo-modal");
             elemento.setAttribute("style", "visibility: visible; opacity: 1");
-            //console.log("ingresamos")
             var html="";
             //const formData = new FormData();
             //formData.append('lista_id', lista_id);
             const data = new URLSearchParams("listId="+lista_id);
-            fetch('list-candidate', {
-                method: 'POST',
-                body: data
+            fetch(rutaCompleta, {
+                method: 'GET'
+                //body: data
 
             })
             .then((response) =>  response.text())
             .then((data) => {
-				console.log(data);
+				//console.log(data);
                 document.getElementById("lista_candidatos").innerHTML=data;
 
             })    //imprimir los datos en la consola
