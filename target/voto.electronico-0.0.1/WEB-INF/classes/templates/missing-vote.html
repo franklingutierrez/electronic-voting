@@ -1,0 +1,50 @@
+<html xmlns:th="http://thymeleaf.org">
+	<head th:replace="layout/layout :: head">
+	</head>
+	<body>
+	<div class="wrapper">
+		<nav th:replace="layout/layout :: nav-vertical"></nav>
+		<div class="main">
+			<nav th:replace="layout/layout :: nav-horizontal"></nav>
+			<main class="content" >
+				<div class="container-fluid p-0">
+					<div class="mb-3">
+						<h1 class="h3 d-inline align-middle" th:text="${title}"></h1>
+					</div>
+					<div class="row">
+						<div class="card pt-4 pb-2 px-4" >
+							<table th:if="${students.size() > 0}" class="table table-sm table-bordered table-hover" style="font-size: .9rem;">
+							  <thead class="bg-dark text-white">
+							    <tr>
+							      <th class="text-left"   scope="col">#</th>
+							      <th class="text-center" scope="col">Nombre</th>
+							      <th class="text-center" scope="col">Grado</th>
+							      <th class="text-center" scope="col">Sección</th>
+							    </tr>
+							  </thead>
+							  <tbody>
+							  	<tr th:each="student,stat : ${students}">
+							  		<td scope="row" th:text="${stat.count}"></td>
+							      	<td th:text="${student.name}"></td>
+							      	<td class="text-center" th:text="${student.grade.name}"></td>
+							      	<td class="text-center" th:text="${student.section.name}"></td>
+							    </tr>
+							  </tbody>
+							</table>
+							<div style="background-color: #e45a1c; padding: 20px; color: aliceblue;" th:unless="${students.size() > 0}">
+								No hay registros
+							</div>
+						</div>
+				
+					</div>
+				</div>
+				
+			</main>
+			<footer th:replace="layout/layout :: footer"></footer>
+		</div>
+	</div>
+	
+	<div th:replace="layout/layout :: script">	
+	</div>
+	
+</html>

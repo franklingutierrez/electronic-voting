@@ -1,0 +1,92 @@
+<html xmlns:th="http://thymeleaf.org">
+	<head th:replace="layout/layout :: head">
+	</head>
+	<body>
+	<div class="wrapper">
+		<nav th:replace="layout/layout :: nav-vertical"></nav>
+		<div class="main">
+			<nav th:replace="layout/layout :: nav-horizontal"></nav>
+			<main class="content" >
+				<div th:if="${message}" th:classappend="${message[0]=='OK' ? 'alert-success' : 'alert-danger'}" class="alert floating-alert" role="alert" th:text="${message[1]}"></div>
+				<div class="container-fluid p-0">
+					<div class="mb-3">
+						<h1 class="h3 d-inline align-middle" th:text="${title}"></h1>
+					</div>
+					<div class="card pt-4 pb-2 px-4" >
+						<form th:action="@{/student/import}" method="post" enctype="multipart/form-data">
+						<div class="row col-12">
+						
+							<div class="col-12 col-lg-3">
+								<label>Grado</label>
+								<select class="form-select" name="grade" >
+									<option th:each="grade : ${grades}" th:value="${grade.id}" th:text="${grade.name}"></option>
+								</select>
+							</div>
+							<div class="col-12 col-lg-2">
+								<label>Sección</label>
+								<select class="form-select" name="section">
+									<option th:value="${section.id}" th:each="section : ${sections}" th:text="${section.name}"></option>
+								</select>
+							</div>
+							<div class="col-12 col-lg-5">
+								<label>Subir archivo *</label>
+								<input name="file" class="form-control" accept=".xlsx,.xls" type="file" />
+							</div>
+							<div class="col-12 col-lg-2 d-flex justify-content-center align-items-end">
+								<input class="btn btn-primary mt-1 w-100" value="Subir" type="submit" />
+							</div>
+						</div>
+						</form>
+						<table th:if="${noRegisters.size()>0}" class="table table-sm" style="font-size: .9rem;">
+							<thead>
+								<tr>
+									<th colspan="3" class="text-center text-danger">Alumnos no registrados (Número de DNI ya esta registrado)</th>
+								</tr>
+								<tr>
+									<th>#</th>
+									<th>Apellidos y Nombres</th>
+									<th>DNI</th>	
+								</tr>
+								
+							</thead>
+							<tbody>
+								<tr th:each="student,stat : ${noRegisters}">
+									<td th:text="${stat.count}"></td>
+									<td th:text="${student.name}"></td>
+									<td th:text="${student.dni}"></td>
+								</tr>
+							</tbody>
+							
+						</table>
+					</div>
+				</div>
+				
+			</main>
+			<footer th:replace="layout/layout :: footer"></footer>
+		</div>
+	</div>
+	
+	<div th:replace="layout/layout :: script">	
+	</div>
+	<script>
+		function edit(data){
+			//console.log(data);
+			document.getElementById("btnAccion").innerHTML = 'Actualizar';
+			document.getElementById("id").value = data.id;
+			document.getElementById("name").value = data.name;
+			document.getElementById("orden").value = data.orden;
+			var modal = new bootstrap.Modal(document.getElementById("exampleModal"));
+			modal.show();
+			
+		};
+			
+		function register(){
+			document.getElementById("btnAccion").innerHTML = 'Registrar';
+			document.getElementById("id").value = '';
+			document.getElementById("name").value = '';
+			document.getElementById("orden").value = '';
+			var modal = new bootstrap.Modal(document.getElementById("exampleModal"));
+			modal.show();
+		}
+		</script>
+</html>
