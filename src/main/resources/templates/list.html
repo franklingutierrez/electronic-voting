@@ -21,7 +21,7 @@
 						    <tr>
 						      <th class="text-left" scope="col">#</th>
 						      <th class="text-center" scope="col">Nombre</th>
-						      <th class="text-center" scope="col">Img Candidado.</th>
+						      <!--th class="text-center" scope="col">Img Candidado.</th-->
 						      <th class="text-center" scope="col">Logo</th>
 						      <th class="text-center" scope="col">Estado</th>
 						      <th class="text-center" style="width: 9rem;"></th>
@@ -31,7 +31,7 @@
 						    <tr th:each="list,stat : ${lists}">
 						      <td scope="row" th:text="${stat.count}"></td>
 						      <td><a th:href="@{/list/role/}+${list.id}" th:text="${list.name}">Nombre</a></td>
-						      <td class="text-center" th:text="${list.imgCandidate}"></td>
+						      <!--td class="text-center" th:text="${list.imgCandidate}"></td-->
 						      <td class="text-center" th:text="${list.logo}"></td>
 						      <td class="text-center">
 								  <span th:if="${list.state == '1'}" class="badge bg-success">Activo</span>
@@ -72,7 +72,7 @@
 					<span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
 
 				</div>
-				<div class="col-12">
+				<!--div class="col-12">
 					<label>Img Candidato*</label>
 					<input type="file" class="form-control" id="imgCandidate" th:field="*{imgCandidate}" placeholder="Abreviatura">
 					<span th:if="${#fields.hasErrors('imgCandidate')}" th:errors="*{imgCandidate}"></span>
@@ -80,18 +80,18 @@
 						
 					</span>
 
-				</div>
+				</div-->
 				<div class="col-12">
 					<label>Logo*</label>
 					<input type="file" class="form-control" id="logo" th:field="*{logo}" placeholder="Logo">
 					<span th:if="${#fields.hasErrors('logo')}" th:errors="*{logo}"></span>
 					<span style="color: 086cc3; margin-left: 10px;" id="slogo"></span>
 				</div>
-				<div class="col-12">
+				<!--div class="col-12">
 					<label for="exampleColorInput" class="form-label">Color</label>
 					<input type="color" class="form-control form-control-color" id="color" th:field="*{color}"  title="Choose your color">				
 					<span th:if="${#fields.hasErrors('color')}" th:errors="*{logo}"></span>
-				</div>
+				</div-->
 			</div>
 	      </div>
 	      <div class="modal-footer">
@@ -112,9 +112,9 @@
 			document.getElementById("btnAccion").innerHTML 		= 'Actualizar';
 			document.getElementById("id").value 				= data.id;
 			document.getElementById("name").value 				= data.name;
-			document.getElementById("simgCandidate").innerHTML 	= "<button type='button' class='btn-close'></button><img src='/uploads/"+data.imgCandidate+"'/>";
-			document.getElementById("slogo").innerHTML 			= "<button type='button' class='btn-close'></button><img src='/uploads/"+data.logo+"'/>";
-			document.getElementById("color").value 				= data.color;
+			//document.getElementById("simgCandidate").innerHTML 	= "<button type='button' class='btn-close'></button><img src='/uploads/"+data.imgCandidate+"'/>";
+			document.getElementById("slogo").innerHTML 			= "<img src='/uploads/"+data.logo+"'/>";
+			//document.getElementById("color").value 				= data.color;
 			var modal 											= new bootstrap.Modal(document.getElementById("exampleModal"));
 			modal.show();
 			
@@ -123,10 +123,10 @@
 		function register(){
 			document.getElementById("btnAccion").innerHTML 		= 'Registrar';
 			document.getElementById("id").value 				= '';
-			document.getElementById("simgCandidate").innerHTML 	= '';
+			//document.getElementById("simgCandidate").innerHTML 	= '';
 			document.getElementById("slogo").innerHTML 			= '';
 			document.getElementById("name").value 				= '';
-			document.getElementById("color").value 				= '';
+			//document.getElementById("color").value 				= '';
 			var modal 											= new bootstrap.Modal(document.getElementById("exampleModal"));
 			modal.show();
 		}

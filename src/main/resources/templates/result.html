@@ -19,7 +19,7 @@
     }
 </style>
 <body>
-<h1>Resultados Elecciones Municipio Escolar 2023</h1>
+<h1 th:text="${election.name +' ' +election.year} "></h1>
 <div class="grafico">
     <canvas id="myChart" width="400" height="400"></canvas>
 </div>

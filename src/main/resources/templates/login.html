@@ -39,47 +39,26 @@
 	<main class="d-flex w-100">
 		<div class="container d-flex flex-column">
 			<div class="row vh-100">
-				<div class="col-sm-10 col-md-8 col-lg-6 mx-auto d-table h-100">
+				<div class="col-sm-10 col-md-8 col-lg-4 mx-auto d-table h-100">
 					<div class="d-table-cell align-middle">
-						<div th:if="${error}" class="alert alert-danger floating-alert" role="alert" th:text="${error}"></div>
-						<div class="text-center mt-4">
-							<h1 class="h2">Bienvenido</h1>
-							<p class="lead">
-								Inicia sesión con tu cuenta para continuar
-							</p>
-						</div>
-
+						
+						<div th:if="${message}" th:classappend="${message[0]=='OK' ? 'alert-success' : 'alert-danger'}" class="alert floating-alert" role="alert" th:text="${message[1]}"></div>
 						<div class="card">
 							<div class="card-body">
 								<div class="m-sm-4">
 									<div class="text-center">
-										<img src="img/avatars/avatar.jpg" alt="Charles Hall"
-											class="img-fluid rounded-circle" width="132" height="132" />
+										<img th:src="@{/img/logo_inicio.png}" alt="voto electrónico" class="img-fluid rounded-circle" width="132" height="132" />
 									</div>
 									<form method="post" th:action="@{/login}">
 										<div class="mb-3">
 											<label class="form-label">Usuario</label>
 											<input class="form-control form-control-lg" type="text" autofocus name="username"
 												placeholder="Ingrese usuario" />
-												<!--small style="color: #eb0000;" th:if="${email != null && email.isBlank()}" th:text="'Campo requerido'"></small-->
 										</div>
 										<div class="mb-3">
-											<label class="form-label">Password</label>
+											<label class="form-label">Contraseña</label>
 											<input class="form-control form-control-lg"  type="password" name="password"
 												placeholder="Enter your password" />
-												<!--small style="color: #eb0000;" th:if="${password != null && password.isBlank()}" th:text="'Campo requerido'"></small-->
-											<small>
-												<a href="index.html">Has olvidado tu contraseña?</a>
-											</small>
-										</div>
-										<div>
-											<label class="form-check">
-												<input class="form-check-input" type="checkbox" value="remember-me"
-													name="remember-me">
-												<span class="form-check-label">
-													Recuerdame la próxima vez
-												</span>
-											</label>
 										</div>
 										<div class="text-center mt-3">
 											<button type="submit" class="btn btn-lg btn-primary">Ingresar</button>

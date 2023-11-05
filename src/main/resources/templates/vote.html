@@ -5,14 +5,20 @@
 <body>
     <div class="container">
         <div class="left" th:fragment="left">
-            <div class="alex">
-                <img th:if="${election != null}" th:src="@{/uploads/}+${election.logo}">
-                <img th:unless="${election != null}" th:src="@{/uploads/}+'x.png'">
+			
+            <div class="alex" style="background-color: white;">
+				
+                <img th:if="${session.election != null}" th:src="@{/uploads/}+${session.election.logo}">
+                <img th:unless="${session.election != null}" th:src="@{/uploads/}+'x.png'">
+                <strong>
+					<p th:if="${session.election != null}" style="text-align: center;color: #033771; font-size: 1.5rem;" th:text="${session.election.name +' '+session.election.year}">
+					</p>
+                </strong>
             </div>
         </div>
         <div class="right">
 	        <div>
-            <div class="datos">Hola <strong th:text="${student.name}"></strong>, para emitir tu voto hacer click en la imagen de su candidato,
+            <div class="datos">Hola <strong th:text="${session.student.name}"></strong>, para emitir tu voto hacer click en la imagen de su candidato,
                 para ver la lista, click en la opción Candidatos.
             </div>
             <h1>Listas de Votación</h1>
@@ -61,7 +67,6 @@
 		
 		        <div class="modal__footer">
 		            <button onclick="cerrar()" class="button" type="button">Cancelar</button>
-		            <input type="hidden" name="student" th:value="${student.id}">
 		            <input type="hidden" id="lista_id" name="lista">
 		            <button class="button" type="submit">Aceptar</button>
 		        </div>
