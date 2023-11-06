@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.cavm.voto.electronico.ApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 11.625 s - in com.cavm.voto.electronico.ApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 18.006 s - in com.cavm.voto.electronico.ApplicationTests

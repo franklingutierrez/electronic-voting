@@ -116,43 +116,48 @@ public class StudentController {
 		List<Student> noRegisters = new ArrayList<>();
 		int count = 0;
 		if(grade != null && section != null) {
-			Workbook workbook = WorkbookFactory.create(file.getInputStream());
-		    Sheet sheet = workbook.getSheetAt(0);
-		    //for (Row row : sheet) {
-		    Grade grad = new Grade();
-		    grad.setId(grade);
-		    Section sec = new Section();
-		    sec.setId(section);
-		    String name;
-		    String dni;
-		    
-		    for (int i = 1; i <= sheet.getLastRowNum(); i++) {
-		        Row row = sheet.getRow(i);
-		        Student student = new Student();
-		        student.setGrade(grad);
-		        student.setSection(sec);
-		        if(row.getCell(0) != null && row.getCell(1)!=null) {
-		        	//System.out.println("+++++:::"+row.getCell(0));
-		            name = row.getCell(0).getStringCellValue();
-		            if(row.getCell(1).getCellType() == CellType.NUMERIC) {
-		            	dni = String.valueOf((long)row.getCell(1).getNumericCellValue());
-		            }else dni = row.getCell(1).getStringCellValue();
-		            if(!name.isBlank() && !dni.isBlank()) { // no deben estar en blanco 
-		            	Student stuExist = studentService.findByDni(dni);
-		            	student.setName(name);
-		            	student.setDni(dni);
-		            	if(stuExist == null) {
-			            	studentService.save(student);
-			            	count++;
-		            	}else {
-		            		noRegisters.add(student);
-		            	}
-		            	
-		            }
-		        }
-		    }
-		   
-			model.addAttribute("message", new String[] {"OK","Se registraron "+count+" Alumnos"});
+			if(!file.isEmpty()) {
+				Workbook workbook = WorkbookFactory.create(file.getInputStream());
+			    Sheet sheet = workbook.getSheetAt(0);
+			    //for (Row row : sheet) {
+			    Grade grad = new Grade();
+			    grad.setId(grade);
+			    Section sec = new Section();
+			    sec.setId(section);
+			    String name;
+			    String dni;
+			    
+			    for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+			        Row row = sheet.getRow(i);
+			        Student student = new Student();
+			        student.setGrade(grad);
+			        student.setSection(sec);
+			        if(row.getCell(0) != null && row.getCell(1)!=null) {
+			        	//System.out.println("+++++:::"+row.getCell(0));
+			            name = row.getCell(0).getStringCellValue();
+			            if(row.getCell(1).getCellType() == CellType.NUMERIC) {
+			            	dni = String.valueOf((long)row.getCell(1).getNumericCellValue());
+			            }else dni = row.getCell(1).getStringCellValue();
+			            if(!name.isBlank() && !dni.isBlank()) { // no deben estar en blanco 
+			            	Student stuExist = studentService.findByDni(dni);
+			            	student.setName(name);
+			            	student.setDni(dni);
+			            	if(stuExist == null) {
+				            	studentService.save(student);
+				            	count++;
+			            	}else {
+			            		noRegisters.add(student);
+			            	}
+			            	
+			            }
+			        }
+			    }
+			   
+				model.addAttribute("message", new String[] {"OK","Se registraron "+count+" Alumnos"});
+			}else {
+				model.addAttribute("message", new String[] {"ERROR","Falta subir archivo!!"});
+			}
+			
 		}else {
 			model.addAttribute("message", new String[] {"ERROR","Seleccione grado y sección!!"});
 		}
@@ -161,7 +166,7 @@ public class StudentController {
 		model.addAttribute("title", "Importar Estudiantes");
 		model.addAttribute("grades", gradeService.findAll());
 		model.addAttribute("sections", sectionService.findAllByOrderById());
-		 model.addAttribute("noRegisters", noRegisters);
+		model.addAttribute("noRegisters", noRegisters);
 		return "student-import";
 	
 	}

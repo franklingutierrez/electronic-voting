@@ -1,4 +1,4 @@
-# Created at 2023-11-05T19:10:47.037
+# Created at 2023-11-05T20:20:43.176
 Boot Manifest-JAR contains absolute paths in classpath 'E:\proyectos-netbeans\spring\elecciones.escolares\target\test-classes'
 Hint: <argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
 'other' has different root
