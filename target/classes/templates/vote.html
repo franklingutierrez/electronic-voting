@@ -1,0 +1,120 @@
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head th:replace="layout/layout-election :: head">
+</head>
+
+<body>
+    <div class="container">
+        <div class="left" th:fragment="left">
+			
+            <div class="alex" style="background-color: white;">
+				
+                <img th:if="${session.election != null}" th:src="@{/uploads/}+${session.election.logo}">
+                <img th:unless="${session.election != null}" th:src="@{/uploads/}+'x.png'">
+                <strong>
+					<p th:if="${session.election != null}" style="text-align: center;color: #033771; font-size: 1.5rem;" th:text="${session.election.name +' '+session.election.year}">
+					</p>
+                </strong>
+            </div>
+        </div>
+        <div class="right">
+	        <div>
+            <div class="datos">Hola <strong th:text="${session.student.name}"></strong>, para emitir tu voto hacer click en la imagen de su candidato,
+                para ver la lista, click en la opción Candidatos.
+            </div>
+            <h1>Listas de Votación</h1>
+            <div class="listas">
+					
+                    <div class="card" th:each="list : ${lists}">
+                        <div class="logo">
+                            <a th:onclick="confirmar('[[${list.name}]]',[[${list.id}]])" href="#">
+								<img th:src="@{/uploads/}+${list.logo}" alt="">
+							</a>
+
+                        </div>
+                        <span>
+                            <a class="candidato" th:onclick="verCandidatos([[${list.id}]])" href="#">
+                                Candidatos
+                            </a>
+                        </span>
+                        <div class="title">
+                            <p th:text="${list.name}"></p>
+                        </div>
+
+                    </div>
+
+            </div>
+
+        </div>
+        </div>
+    </div>
+    <!-- Modal candidate-list -->
+    <div id="demo-modal" class="modal">
+    	<div class="modal__content">
+        	<h1 style="margin: 3px;">Candidatos</h1>
+
+        	<div id="lista_candidatos"></div>
+
+        	<a href="#" onclick="cerrar2()" class="modal__close">&times;</a>
+    	</div>
+	</div>
+    <!-- Modal  -->
+    <div id="confirm-modal" class="modal-confirm">
+		<form th:action="@{/election/vote}" method="POST">
+		    <div class="modal__content">
+		        <h2>Confirmar!!!</h2>
+		        <p id="candidato">
+		        </p>
+		
+		        <div class="modal__footer">
+		            <button onclick="cerrar()" class="button" type="button">Cancelar</button>
+		            <input type="hidden" id="lista_id" name="lista">
+		            <button class="button" type="submit">Aceptar</button>
+		        </div>
+		
+		        <a href="#" onclick="cerrar()" class="modal_close_confirm">&times;</a>
+		    </div>
+		</from>
+	</div>
+</body>
+<script type="text/javascript">
+    function confirmar(nombre,id){
+        elemento = document.getElementById("confirm-modal");
+        elemento.setAttribute("style", "visibility: visible; opacity: 1");
+        document.getElementById("lista_id").value = id;
+        document.getElementById("candidato").innerHTML="Su voto será por la lista <strong><i>"+nombre+ "</strong></i> ?";
+    }
+    function cerrar(){
+        elemento = document.getElementById("confirm-modal");
+        elemento.setAttribute("style", "visibility: hidden; opacity: 0");
+
+    }
+    function cerrar2(){
+            elemento = document.getElementById("demo-modal");
+            elemento.setAttribute("style", "visibility: hidden; opacity: 0");
+
+        }
+    function verCandidatos(lista_id){
+		var baseURL = window.location.protocol + '//' + window.location.host;
+		let rutaCompleta = baseURL+'/election/list-candidate/'+lista_id;
+		console.log(rutaCompleta);
+            elemento = document.getElementById("demo-modal");
+            elemento.setAttribute("style", "visibility: visible; opacity: 1");
+            var html="";
+            //const formData = new FormData();
+            //formData.append('lista_id', lista_id);
+            const data = new URLSearchParams("listId="+lista_id);
+            fetch(rutaCompleta, {
+                method: 'GET'
+                //body: data
+
+            })
+            .then((response) =>  response.text())
+            .then((data) => {
+				//console.log(data);
+                document.getElementById("lista_candidatos").innerHTML=data;
+
+            })    //imprimir los datos en la consola
+            .catch(err => console.log('Solicitud fallida', err)); // Capturar errores
+        }
+    </script>
+</html>

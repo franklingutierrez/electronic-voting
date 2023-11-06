@@ -49,8 +49,13 @@ public class RoleController {
 	@GetMapping("/delete/{id}")
 	public String delete(@PathVariable Long id, RedirectAttributes redirect) {
 		if(id>0) {
-			roleService.deleteById(id);
-			redirect.addFlashAttribute("message", new String[] {"OK", "Registro eliminado!!"});
+			try {
+				roleService.deleteById(id);
+				redirect.addFlashAttribute("message", new String[] {"OK", "Registro eliminado!!"});
+			} catch (Exception e) {
+				redirect.addFlashAttribute("message", new String[] {"ERROR", "Registro tiene dependencias!!"});
+			}
+			
 		}
 		return "redirect:/role";
 		

@@ -1,0 +1,39 @@
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head th:replace="layout/layout-election :: head">
+</head>
+
+<body>
+    <div th:if="${session.permissionIp}" class="container">
+        <div class="left" th:fragment="left">
+			
+            <div class="alex" style="background-color: white;">
+				
+                <img th:if="${session.election != null}" th:src="@{/uploads/}+${session.election.logo}">
+                <img th:unless="${session.election != null}" th:src="@{/uploads/}+'x.png'">
+                <strong>
+					<p th:if="${session.election != null}" style="text-align: center;color: #033771; font-size: 1.5rem;" th:text="${session.election.name +' '+session.election.year}">
+					</p>
+                </strong>
+            </div>
+        </div>
+        <div class="right">
+	        <form th:action="@{/election}" method="POST">
+	            <img th:src="@{/uploads/}+${session.institution.logo}" width="90" height="100">
+	            <h1 th:text="${session.institution.name}"></h1>
+	            <p>Ingrese su código</p>
+	            <input name="dni" autocomplete="off" type="text" style="width: 100%;" />
+	                <small th:if="${message}" th:text="${message}"></small>
+	
+	            <button class="button" type="submit">Buscar</button>
+	        </form>
+	        <div th:if="${messageVote}" class="alert alert-success floating-alert" role="alert" th:text="${messageVote}"></div>
+        </div>
+    </div>
+    <div th:unless="${session.permissionIp}" style="background-color:rgb(226, 226, 226); display: flex; justify-content: center;align-items: center; height: 100vh;">
+		<div style="background-color: red; padding: 35px; color: aliceblue; border-radius: 10px;font-size: 18px;">
+ 			SU ORDENADOR NO TIENE PERMISO
+		</div>
+    </div>
+</body>
+<div th:replace="layout/layout-election ::js"></div>
+</html>

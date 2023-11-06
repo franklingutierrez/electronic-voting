@@ -1,0 +1,102 @@
+<html xmlns:th="http://thymeleaf.org">
+	<head th:replace="layout/layout :: head">
+	</head>
+	<body>
+	<div class="wrapper">
+		<nav th:replace="layout/layout :: nav-vertical"></nav>
+		<div class="main">
+			<nav th:replace="layout/layout :: nav-horizontal"></nav>
+			<main class="content" >
+				<div th:if="${message}" th:classappend="${message[0]=='OK' ? 'alert-success' : 'alert-danger'}" class="alert floating-alert" role="alert" th:text="${message[1]}"></div>
+				<div class="container-fluid p-0">
+					<div class="mb-3">
+						<h1 class="h3 d-inline align-middle" th:text="${title}"></h1>
+					</div>
+					<div class="card pt-4 pb-2 px-4" >
+						<form th:action="@{/student}" th:object="${newStudent}" method="post">
+						<div class="row col-12">
+						
+							<div class="col-12 col-lg-3">
+								<label>Grado</label>
+								<select class="form-select" th:field="*{grade}" >
+									<option th:each="grade : ${grades}" th:value="${grade.id}" th:text="${grade.name}"></option>
+								</select>
+							</div>
+							<div class="col-12 col-lg-2">
+								<label>Sección</label>
+								<select class="form-select" th:field="*{section}">
+									<option th:value="${section.id}" th:each="section : ${sections}" th:text="${section.name}"></option>
+								</select>
+							</div>
+							<div class="col-12 col-lg-2">
+								<label>DNI</label>
+								<input class="form-control" th:field="*{dni}" type="text" />
+							</div>
+							<div class="col-12 col-lg-5">
+								<label>Apellidos y Nombres</label>
+								<input class="form-control" th:field="*{name}" type="text" />
+							</div>
+						</div>
+						<div class="row col-12">
+							<input class="btn btn-primary btn-sm mt-1" value="Registrar / Listar" type="submit" />
+						</div>
+						</form>
+						<table th:if="${students}" class="table table-sm" style="font-size: .9rem;">
+							<thead>
+								<tr>
+									<th class="text-center" colspan="6" th:text="${newStudent2.grade.name}+ ' '+ ${newStudent2.section.name}"></th>
+								</tr>
+								<tr>
+									<th>#</th>
+									<th>Apellidos y Nombres</th>
+									<th>DNI</th>
+									<!--th>Grado</th>
+									<th>Sección</th-->
+									<th></th>		
+								</tr>
+								
+							</thead>
+							<tbody>
+								<tr th:each="student,stat : ${students}">
+									<td th:text="${stat.count}"></td>
+									<td th:text="${student.name}"></td>
+									<td th:text="${student.dni}"></td>
+									<!--td th:text="${student.grade.name}"></td>
+									<td th:text="${student.section.name}"></td-->
+									<td><a th:href="@{/student/delete/}+${student.id}" class="btn btn-sm btn-danger">Eliminar</a></td>
+								</tr>
+							</tbody>
+							
+						</table>
+					</div>
+				</div>
+				
+			</main>
+			<footer th:replace="layout/layout :: footer"></footer>
+		</div>
+	</div>
+	
+	<div th:replace="layout/layout :: script">	
+	</div>
+	<script>
+		function edit(data){
+			//console.log(data);
+			document.getElementById("btnAccion").innerHTML = 'Actualizar';
+			document.getElementById("id").value = data.id;
+			document.getElementById("name").value = data.name;
+			document.getElementById("orden").value = data.orden;
+			var modal = new bootstrap.Modal(document.getElementById("exampleModal"));
+			modal.show();
+			
+		};
+			
+		function register(){
+			document.getElementById("btnAccion").innerHTML = 'Registrar';
+			document.getElementById("id").value = '';
+			document.getElementById("name").value = '';
+			document.getElementById("orden").value = '';
+			var modal = new bootstrap.Modal(document.getElementById("exampleModal"));
+			modal.show();
+		}
+		</script>
+</html>

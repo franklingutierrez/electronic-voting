@@ -86,7 +86,13 @@ public class StudentController {
 		stu.setDni("");
 		stu.setName("");
 		if(id > 0) {
-			studentService.deleteById(id);
+			try {
+				studentService.deleteById(id);
+				flash.addFlashAttribute("message", new String[] {"OK", "Registro eliminado!!"});
+			} catch (Exception e) {
+				flash.addFlashAttribute("message", new String[] {"ERROR", "Registro tiene dependencias!!"});
+			}
+			
 		}
 		flash.addFlashAttribute("newStudent2", stu);
 		flash.addFlashAttribute("students", studentService.findAllGradeSection(stu.getGrade(), stu.getSection()));

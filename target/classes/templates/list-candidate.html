@@ -1,0 +1,7 @@
+<html xmlns:th="http://thymeleaf.org">
+	<ul>
+		<li th:each="rol : ${roles}">
+			<strong th:text="${rol.role.name}+ ':'"></strong><p style="margin: 1px;" th:text="${rol.nameCandidate}"></p>
+		</li>
+	</ul>
+</html>

@@ -39,7 +39,7 @@ public class CandidateListController {
 	@Autowired
 	private IListRoleService listRoleService;
 	
-	@GetMapping
+	@GetMapping("")
 	public String Candidate(Model model) {
 		CandidateList newList = new CandidateList();
 		model.addAttribute("ruta", "list");
@@ -49,8 +49,8 @@ public class CandidateListController {
 		return "list";
 	}
 	
-	@PostMapping
-	public String Candidate(@Valid CandidateList newList, BindingResult result, /*@RequestParam MultipartFile imgCandidate,*/ @RequestParam MultipartFile logo, RedirectAttributes flash) throws IOException {
+	@PostMapping("")
+	public String Candidate(@Valid CandidateList newList, BindingResult result, @RequestParam MultipartFile logo, RedirectAttributes flash) throws IOException {
 		if(newList.getName().isBlank()) {
 			flash.addFlashAttribute("message", new String[] {"ERROR", "Todos los datos son obligatorios!"});
 			return "redirect:/list";
@@ -68,7 +68,7 @@ public class CandidateListController {
 			String extension 	= StringUtils.getFilenameExtension(logo.getOriginalFilename());
 			String name			= newList.getName().replace(" ", "_");
 			byte[] bytes2 		= logo.getBytes();
-			Path rutaCompleta2	= Paths.get(path +"//"+name+"_logo."+extension);
+			Path rutaCompleta2	= Paths.get(path.toString() +"//"+name+"_logo."+extension);
 			Files.write(rutaCompleta2, bytes2);
 			newList.setLogo(name+"_logo."+extension);
 		}else {
@@ -89,9 +89,15 @@ public class CandidateListController {
 	}
 	
 	@GetMapping("/delete/{id}")
-	public String delete(@PathVariable Long id) {
+	public String delete(@PathVariable Long id, RedirectAttributes flash) {
 		if(id>0) {
-			candidateListService.delete(id);
+			try {
+				candidateListService.delete(id);
+				flash.addFlashAttribute("message", new String[] {"OK", "Resgistro eliminado!!!"});
+			}catch(Exception e) {
+				flash.addFlashAttribute("message", new String[] {"ERROR", "Registro tiene dependencia!!!"});
+			}
+			
 		}
 		return "redirect:/list";
 	}
@@ -111,9 +117,10 @@ public class CandidateListController {
 		return "list-role";
 	}
 	@GetMapping("/role/delete/{listId}/{id}")
-	public String delete(@PathVariable Long listId, @PathVariable Long id, Model model) {
+	public String delete(@PathVariable Long listId, @PathVariable Long id, Model model, RedirectAttributes redirect) {
 		if(id>0) {
 			listRoleService.deleteById(id);
+			redirect.addFlashAttribute("message", new String[] {"OK", "Resgistro eliminado!!!"});
 		}
 		return "redirect:/list/role/"+listId;
 	}
