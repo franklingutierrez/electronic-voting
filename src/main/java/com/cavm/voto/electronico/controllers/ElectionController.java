@@ -135,7 +135,7 @@ public class ElectionController {
 			vote.setStudent(student);
 			voteService.save(vote);
 			redirect.addFlashAttribute("messageVote", "Su voto se registro con exito!!");
-			httpSession.invalidate();
+			httpSession.removeAttribute("student");
 			return "redirect:/election";
 		}
 		model.addAttribute("lists", candidateListService.findAllByOrderById());

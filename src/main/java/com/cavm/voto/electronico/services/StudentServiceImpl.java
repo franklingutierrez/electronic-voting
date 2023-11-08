@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cavm.voto.electronico.models.Grade;
 import com.cavm.voto.electronico.models.Section;
 import com.cavm.voto.electronico.models.Student;
 import com.cavm.voto.electronico.respositories.IStudentRepository;
+
 
 @Service
 public class StudentServiceImpl implements IStudentService {
@@ -26,6 +28,7 @@ public class StudentServiceImpl implements IStudentService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteById(Long id) {
 		studentRepository.deleteById(id);
 		

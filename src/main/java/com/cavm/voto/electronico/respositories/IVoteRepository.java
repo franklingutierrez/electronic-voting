@@ -17,4 +17,8 @@ public interface IVoteRepository extends CrudRepository<Vote, Long> {
 	
 	@Query("SELECT s FROM Vote v  Right JOIN v.student s WHERE s IS NULL")
     List<Student> findStudentsWithoutVotes();
+	
+	void deleteByStudent(Student student);
+	
+
 }

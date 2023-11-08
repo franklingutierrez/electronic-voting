@@ -27,6 +27,7 @@ import com.cavm.voto.electronico.models.Student;
 import com.cavm.voto.electronico.services.IGradeService;
 import com.cavm.voto.electronico.services.ISectionService;
 import com.cavm.voto.electronico.services.IStudentService;
+import com.cavm.voto.electronico.services.IVoteService;
 
 @Controller
 @RequestMapping("/student")
@@ -40,6 +41,9 @@ public class StudentController {
 	
 	@Autowired
 	private IStudentService studentService;
+	
+	@Autowired
+	private IVoteService voteService;
 	
 	@GetMapping("")
 	public String register(Model model) {
@@ -83,10 +87,12 @@ public class StudentController {
 	@GetMapping("/delete/{id}")
 	public String delete(@PathVariable Long id, Model model, RedirectAttributes flash) {
 		Student stu = studentService.findById(id);
-		stu.setDni("");
-		stu.setName("");
+		//stu.setDni("");
+		//stu.setName("");
+		
 		if(id > 0) {
 			try {
+				voteService.deleteByStudent(stu);
 				studentService.deleteById(id);
 				flash.addFlashAttribute("message", new String[] {"OK", "Registro eliminado!!"});
 			} catch (Exception e) {

@@ -11,4 +11,5 @@ public interface IVoteService {
 	Vote findByStudent(Student student);
 	List<Object[]> countVoteByList();
 	List<Student> findStudentsWithoutVotes();
+	void deleteByStudent(Student student);
 }

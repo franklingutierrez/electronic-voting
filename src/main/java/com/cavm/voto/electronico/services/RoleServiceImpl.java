@@ -34,6 +34,7 @@ public class RoleServiceImpl implements IRoleService {
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Role findById(Long id) {
 		return roleRepository.findById(id).get();
 	}
