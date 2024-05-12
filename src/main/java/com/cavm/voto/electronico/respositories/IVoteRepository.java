@@ -2,6 +2,7 @@ package com.cavm.voto.electronico.respositories;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
@@ -19,6 +20,10 @@ public interface IVoteRepository extends CrudRepository<Vote, Long> {
     List<Student> findStudentsWithoutVotes();
 	
 	void deleteByStudent(Student student);
+	
+	@Modifying
+	@Query("DELETE FROM Vote")
+	void resetVotes();
 	
 
 }

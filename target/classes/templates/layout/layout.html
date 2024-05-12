@@ -46,14 +46,20 @@
 					</li>
 					<li class="sidebar-item" th:classappend="${ruta == 'institution' ? 'active' : ''}">
 						<a class="sidebar-link" th:href="@{/institution}">
-							<i class="align-middle" data-feather="sliders"></i> <span
+							<i class="align-middle" data-feather="home"></i> <span
 								class="align-middle">Institución</span>
 						</a>
 					</li>
 					<li class="sidebar-item" th:classappend="${ruta == 'election-config' ? 'active' : ''}">
-						<a class="sidebar-link" th:href="@{/election/config}">
-							<i class="align-middle" data-feather="sliders"></i> <span
+						<a class="sidebar-link"  th:href="@{/election/config}">
+							<i class="align-middle" data-feather="settings"></i> <span
 								class="align-middle">Eleccion config</span>
+						</a>
+					</li>
+					<li class="sidebar-item" th:classappend="${ruta == 'reset-vote' ? 'active' : ''}">
+						<a class="sidebar-link" th:onclick="confirmar()" href="#">
+							<i class="align-middle" data-feather="rotate-ccw"></i> <span
+								class="align-middle">Resetear Votos</span>
 						</a>
 					</li>
 					<li class="sidebar-header">
@@ -63,37 +69,37 @@
 
 					<li class="sidebar-item" th:classappend="${ruta == 'list' ? 'active' : ''}">
 						<a class="sidebar-link" th:href="@{/list}">
-							<i class="align-middle" data-feather="sliders"></i> <span
+							<i class="align-middle" data-feather="trello"></i> <span
 								class="align-middle">Listas</span>
 						</a>
 					</li>
 
 					<li class="sidebar-item" th:classappend="${ruta == 'role' ? 'active' : ''}">
 						<a class="sidebar-link" th:href="@{/role}">
-							<i class="align-middle" data-feather="user"></i> <span class="align-middle">Roles</span>
+							<i class="align-middle" data-feather="award"></i> <span class="align-middle">Roles</span>
 						</a>
 					</li>
 
 					<li class="sidebar-item" th:classappend="${ruta == 'grade' ? 'active' : ''}">
 						<a class="sidebar-link" th:href="@{/grade}">
-							<i class="align-middle" data-feather="log-in"></i> <span class="align-middle">Grados</span>
+							<i class="align-middle" data-feather="columns"></i> <span class="align-middle">Grados</span>
 						</a>
 					</li>
 
 					<li class="sidebar-item" th:classappend="${ruta == 'section' ? 'active' : ''}">
 						<a class="sidebar-link" th:href="@{/section}">
-							<i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Sección</span>
+							<i class="align-middle" data-feather="grid"></i> <span class="align-middle">Sección</span>
 						</a>
 					</li>
 
 					<li class="sidebar-item" th:classappend="${ruta == 'student' ? 'active' : ''}">
 						<a class="sidebar-link" th:href="@{/student}">
-							<i class="align-middle" data-feather="book"></i> <span class="align-middle">Alumnos</span>
+							<i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Alumnos</span>
 						</a>
 					</li>
 					<li class="sidebar-item" th:classappend="${ruta == 'student-import' ? 'active' : ''}">
 						<a class="sidebar-link" th:href="@{/student/import}">
-							<i class="align-middle" data-feather="book"></i> <span class="align-middle">Alumnos Import</span>
+							<i class="align-middle" data-feather="upload"></i> <span class="align-middle">Alumnos Import</span>
 						</a>
 					</li>
 
@@ -102,18 +108,18 @@
 					</li>
 					<li class="sidebar-item" th:classappend="${ruta == 'election' ? 'active' : ''}">
 						<a class="sidebar-link" th:href="@{/election}">
-							<i class="align-middle" data-feather="square"></i> <span class="align-middle">Eleccion</span>
+							<i class="align-middle" data-feather="airplay"></i> <span class="align-middle">Eleccion</span>
 						</a>
 					</li>
 					
 					<li class="sidebar-item" th:classappend="${ruta == 'result' ? 'active' : ''}">
 						<a class="sidebar-link" th:href="@{/election/result}">
-							<i class="align-middle" data-feather="square"></i> <span class="align-middle">Resultado</span>
+							<i class="align-middle" data-feather="bar-chart"></i> <span class="align-middle">Resultado</span>
 						</a>
 					</li>
 					<li class="sidebar-item" th:classappend="${ruta == 'missing-vote' ? 'active' : ''}">
 						<a class="sidebar-link" th:href="@{/election/missing-vote}">
-							<i class="align-middle" data-feather="square"></i> <span class="align-middle">Faltan Votar</span>
+							<i class="align-middle" data-feather="frown"></i> <span class="align-middle">Faltan Votar</span>
 						</a>
 					</li>
 				</ul>
@@ -152,9 +158,11 @@
 						</li>
 					</ul>
 				</div>
+				
 			</nav>
 
 			<main th:fragment="container" class="content">
+				
 				 
 			</main>
 			
@@ -185,9 +193,37 @@
 						</div>
 					</div>
 				</div>
+				<!-- Modal  -->
+			    <!-- Modal -->
+				<div class="modal fade" id="confirm-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				  <div class="modal-dialog">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h1 class="modal-title fs-5" id="exampleModalLabel">Resetear Votos</h1>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+					  <form th:action="@{/election/reset}"  method="post">
+				      <div class="modal-body">
+					        <div class="row">
+								<input type="hidden" value="${#httpServletRequest.requestURI}">
+								<p>Esta seguro de eliminar todos los votos emitios??</p>
+							</div>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+				        <button type="submit"  class="btn btn-primary">Resetear</button>
+				      </div>
+					  </form>
+				    </div>
+				  </div>
+				</div>
+				<!-- fin modal -->
 			</footer>
+			
 		</div>
+		
 	</div>
+	 
 	<div th:fragment="script">
 		<script th:src="@{/js/app.js}"></script>
 		<script>
@@ -207,6 +243,16 @@
 		            alertElement.parentNode.removeChild(alertElement);
 		        }, 500);
 		    }, 4000);
+		};
+	    function confirmar(){
+			var modal = new bootstrap.Modal(document.getElementById("confirm-modal"));
+				modal.show();
+	       
+	        //document.getElementById("lista_id").value = id;
+	        //document.getElementById("candidato").innerHTML="Su voto será por la lista <strong><i>"+nombre+ "</strong></i> ?";
+	    };
+	    function reset(){
+			
 		}
 		</script>
 	</div>

@@ -33,6 +33,7 @@ import com.cavm.voto.electronico.services.IListRoleService;
 import com.cavm.voto.electronico.services.IStudentService;
 import com.cavm.voto.electronico.services.IVoteService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -229,4 +230,12 @@ public class ElectionController {
 		model.addAttribute("students", students);
 		return "missing-vote";
 	} 
+	
+	@PostMapping("/reset")
+	public String resetVote(Model model, HttpServletRequest request) {
+		String requestURI = request.getRequestURI();
+	    System.out.println("La URI de la solicitud es: " + requestURI);
+		voteService.resetVotes();
+		return "redirect:/election/config";
+	}
 }

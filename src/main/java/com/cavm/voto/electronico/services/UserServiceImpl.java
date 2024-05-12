@@ -29,7 +29,6 @@ public class UserServiceImpl implements UserDetailsService /*IUserService*/ {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findByUsername(username);
 		if(user == null) {
-			System.out.println("hollallalala");
 			throw new UsernameNotFoundException("Username "+username + " no existe");
 		}
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();

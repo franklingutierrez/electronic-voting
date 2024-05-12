@@ -47,4 +47,11 @@ public class VoteServiceImpl implements IVoteService {
 		
 	}
 
+	@Override
+	@Transactional
+	public void resetVotes() {
+		voteRepository.resetVotes();
+		
+	}
+
 }
